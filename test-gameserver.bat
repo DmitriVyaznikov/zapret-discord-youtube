@@ -20,9 +20,14 @@ echo   4. fake,udplen + QUIC-фейк + autottl=2 + cutoff=n3
 echo   5. fake + QUIC-фейк + ttl=5 (фиксированный) + cutoff=n3
 echo   6. fake + QUIC-фейк + autottl=2 + без cutoff
 echo:
+echo   --- Стабилизация (без cutoff, разные TTL) ---
+echo   7. fake + QUIC-фейк + autottl=3 + без cutoff
+echo   8. fake + QUIC-фейк + autottl=5 + без cutoff
+echo   9. fake + QUIC-фейк + ttl=5 (фиксированный) + без cutoff
+echo:
 echo   0. Выход
 echo:
-set /p "choice=Выбери вариант (0-6): "
+set /p "choice=Выбери вариант (0-9): "
 
 if "%choice%"=="0" exit /b
 if "%choice%"=="1" goto strat1
@@ -31,6 +36,9 @@ if "%choice%"=="3" goto strat3
 if "%choice%"=="4" goto strat4
 if "%choice%"=="5" goto strat5
 if "%choice%"=="6" goto strat6
+if "%choice%"=="7" goto strat7
+if "%choice%"=="8" goto strat8
+if "%choice%"=="9" goto strat9
 
 echo Неверный выбор
 echo:
@@ -82,6 +90,30 @@ echo [Стратегия 6] fake + QUIC-фейк + autottl=2 + без cutoff
 cd /d %BIN%
 start "zapret: test-gameserver #6" /min "%BIN%winws.exe" --wf-udp=2302,2303 ^
 --filter-udp=2302,2303 --ipset="%LISTS%ipset-all.txt" --dpi-desync=fake --dpi-desync-autottl=2 --dpi-desync-repeats=12 --dpi-desync-any-protocol=1 --dpi-desync-fake-unknown-udp="%BIN%quic_initial_www_google_com.bin"
+goto done
+
+:strat7
+echo:
+echo [Стратегия 7] fake + QUIC-фейк + autottl=3 + без cutoff
+cd /d %BIN%
+start "zapret: test-gameserver #7" /min "%BIN%winws.exe" --wf-udp=2302,2303 ^
+--filter-udp=2302,2303 --ipset="%LISTS%ipset-all.txt" --dpi-desync=fake --dpi-desync-autottl=3 --dpi-desync-repeats=12 --dpi-desync-any-protocol=1 --dpi-desync-fake-unknown-udp="%BIN%quic_initial_www_google_com.bin"
+goto done
+
+:strat8
+echo:
+echo [Стратегия 8] fake + QUIC-фейк + autottl=5 + без cutoff
+cd /d %BIN%
+start "zapret: test-gameserver #8" /min "%BIN%winws.exe" --wf-udp=2302,2303 ^
+--filter-udp=2302,2303 --ipset="%LISTS%ipset-all.txt" --dpi-desync=fake --dpi-desync-autottl=5 --dpi-desync-repeats=12 --dpi-desync-any-protocol=1 --dpi-desync-fake-unknown-udp="%BIN%quic_initial_www_google_com.bin"
+goto done
+
+:strat9
+echo:
+echo [Стратегия 9] fake + QUIC-фейк + ttl=5 (фиксированный) + без cutoff
+cd /d %BIN%
+start "zapret: test-gameserver #9" /min "%BIN%winws.exe" --wf-udp=2302,2303 ^
+--filter-udp=2302,2303 --ipset="%LISTS%ipset-all.txt" --dpi-desync=fake --dpi-desync-ttl=5 --dpi-desync-repeats=12 --dpi-desync-any-protocol=1 --dpi-desync-fake-unknown-udp="%BIN%quic_initial_www_google_com.bin"
 goto done
 
 :done
